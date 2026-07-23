@@ -1,5 +1,5 @@
 local ServerScriptService = game:GetService("ServerScriptService")
-local modules = ServerScriptService.modules
+local modules = ServerScriptService.Server.modules
 local Signal = require(modules.Signal)
 local EnemyData = require(modules.data.EnemyData)
 local HitboxManager = require(modules.player.HitboxManager)
@@ -14,7 +14,7 @@ local MAX_IDLE = 1.3
 local MIN_IDLE = 0.5
 local AGGRO_CHECK_TICK = 0.5
 
-export type State = "idle" | "chase" | "attack" | "dead"
+export type State = "idle" | "chase" | "attack" | "dead" | "destroyed"
 
 function private.safeCancel(thread)
 	if thread and thread ~= coroutine.running() then
@@ -41,8 +41,8 @@ function public.new(player: Player, model: Model, hazardId: string?)
 	self.hazardId = hazardId
 
 	self.model = model
-	self.humanoid = model.Humanoid
-	self.rootPart = model.HumanoidRootPart
+	self.humanoid = model:FindFirstChild("Humanoid")
+	self.rootPart = model:FindFirstChild("HumanoidRootPart")
 	self.originPosition = self.rootPart.Position
 	self.isAttacking = false
 
@@ -198,7 +198,7 @@ function public:drops()
 	if not self.config.drops then
 		return
 	end
-	ItemManager.grantDrops(self.target, self.config.drops)
+	-- ItemManager.grantDrops(self.target, self.config.drops)
 end
 
 function public:destroy()

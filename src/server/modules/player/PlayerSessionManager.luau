@@ -1,7 +1,7 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 local Players = game:GetService("Players")
 
-local modules = ServerScriptService.modules
+local modules = ServerScriptService.Server.modules
 local PlotManager = require(modules.plot.PlotManager)
 
 local ProximityPromptManager = require(modules.player.ProximityPromptManager)

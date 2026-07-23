@@ -1,7 +1,7 @@
 local ProximityPromptService = game:GetService("ProximityPromptService")
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local modules = ServerScriptService.modules
+local modules = ServerScriptService.Server.modules
 local IncidentManager = require(modules.sources.IncidentManager)
 local ToolManager = require(modules.player.ToolManager)
 local SecuringManager = require(modules.city.SecuringManager)
@@ -30,7 +30,7 @@ function private.onPromptTriggered(prompt: ProximityPrompt, player: Player)
 	if incident.player ~= player then
 		return
 	end
-	
+
 	if not SecuringManager.isSecured(incident) then
 		warn("[ProximityPromptManager] " .. player.Name .. " hasn't secured the surrounding area")
 		return

@@ -1,9 +1,10 @@
 local ServerScriptService = game:GetService("ServerScriptService")
-local modules = ServerScriptService.modules
+
+local modules = ServerScriptService.Server.modules
 local PlotManager = require(modules.plot.PlotManager)
-local ThreatData = require(modules.data.ThreatData)
 local DistrictData = require(modules.data.DistrictData)
 local GeneralData = require(modules.data.GeneralData)
+
 local public = {}
 local private = {}
 
@@ -54,11 +55,11 @@ function public.selectThreatType(districtId: string): string?
 	return pool[math.random(1, #pool)]
 end
 
-function public.getThreatTypes(): {[string]: {string}}
+function public.getThreatTypes(): { [string]: { string } }
 	return GeneralData.threatsList
 end
 
-function public.pickLocation(player, districtId: string): Instance?
+function public.pickLocation(player, districtId: string): BasePart?
 	local plotFolder = PlotManager.getPlotFolder(player)
 	if not plotFolder then
 		warn("[Spawner] pickLocation: PlotManager.getPlotFolder returned nil for " .. player.Name)

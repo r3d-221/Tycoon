@@ -1,6 +1,7 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local Signal = require(ServerScriptService.modules.Signal)
+local modules = ServerScriptService.Server.modules
+local Signal = require(modules.Signal)
 
 local public = {}
 local private = {}
@@ -90,7 +91,7 @@ function public.new(data)
 end
 
 -- _ means it will be for each instance but shouldnt be used everywhere
-function public:_recompute(stat: string): number?
+function public:_recompute(stat: statName): number?
 	local total = self.base[stat]
 	for source, amount in self.modifiers[stat] do
 		total += amount

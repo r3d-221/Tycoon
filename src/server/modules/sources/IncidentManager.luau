@@ -1,6 +1,6 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local modules = ServerScriptService.modules
+local modules = ServerScriptService.Server.modules
 local Incident = require(modules.sources.Incident)
 local DistrictData = require(modules.data.DistrictData)
 local HazardSpawner = require(modules.city.HazardSpawner)
@@ -41,7 +41,7 @@ function public.trySpawn(player: Player, cityState: {})
 	return public.spawn(player, threatType, districtId, cityState, location)
 end
 
-function public.spawn(player: Player, threatType: string, districtId: string, cityState: {}, location: Vector3)
+function public.spawn(player: Player, threatType: string, districtId: string, cityState: {}, location: BasePart)
 	if not public.canSpawn(player, districtId) then
 		print("[Manager] spawn: canSpawn -> false, aborting construction")
 		return nil
@@ -70,7 +70,7 @@ function public.spawn(player: Player, threatType: string, districtId: string, ci
 			local hazard = HazardSpawner.spawnEscalation(incident)
 			incident.progressTarget += 1
 			if hazard then
-				EnemyManager.spawn(incident, {hazard})
+				EnemyManager.spawn(incident, { hazard })
 			end
 		elseif newState == "cleared" or newState == "destroyed" then
 			HazardSpawner.clearHazards(incident.id)
@@ -104,7 +104,7 @@ function public.canSpawn(player: Player, districtId: string): boolean
 	return elapsed >= districtInfo.incidentCooldown
 end
 
-function public.getActiveIncidents(player: Player): {[string]: any}
+function public.getActiveIncidents(player: Player): { [string]: any }
 	return incidents[player] or {}
 end
 

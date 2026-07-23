@@ -1,6 +1,6 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local ThreatData = require(ServerScriptService.modules.data.ThreatData)
+local ThreatData = require(ServerScriptService.Server.modules.data.ThreatData)
 
 local public = {}
 
@@ -10,16 +10,16 @@ public.threatRarity = {
 	epic = 0.1029,
 	legendary = 0.045,
 	mythic = 0.002,
-	secret = 0.0001
+	secret = 0.0001,
 }
 
 public.rarityIndex = {
-	common =1,
+	common = 1,
 	rare = 2,
 	epic = 3,
 	legendary = 4,
 	mythic = 5,
-	secret = 6
+	secret = 6,
 }
 
 public.rarityColor = {

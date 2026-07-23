@@ -1,6 +1,6 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local Signal = require(ServerScriptService.modules.Signal)
+local Signal = require(ServerScriptService.Server.modules.Signal)
 
 local public = {}
 local private = {}
@@ -8,7 +8,7 @@ public.__index = public
 
 export type ToolState = "idle" | "using" | "cooldown" | "reloading"
 
-function public.new(player: Player, toolName: string, config: {})
+function public.new(player: Player, toolName: string, config)
 	local self = setmetatable({}, public)
 
 	self.player = player

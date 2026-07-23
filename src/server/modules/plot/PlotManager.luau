@@ -13,7 +13,7 @@ local templatePlotFolder = ReplicatedStorage:FindFirstChild("plot_template")
 local templatePlotItems = templatePlotFolder.items
 local templateDistrictsFolder = templatePlotFolder.districts
 
-local PlotModelData = require(ServerScriptService.modules.data.PlotModelData)
+local PlotModelData = require(ServerScriptService.Server.modules.data.PlotModelData)
 
 local public = {}
 local private = {}
@@ -33,12 +33,12 @@ data = {
 			},
 		},
 		left = {
-			replaceable = {}
-		}
+			replaceable = {},
+		},
 	},
 }
 
-function public.onStart(player: Players)
+function public.onStart(player: Player)
 	private.assignPlot(player)
 end
 
@@ -54,7 +54,7 @@ function public.getPlotFolder(player: Player): Instance?
 end
 
 -- creates an item
-function public.createItem(model: Instance, folder: Folder)
+function public.createItem(model: Model | BasePart, folder: Folder)
 	local itemFolder = folder:FindFirstChild(ITEMS_FOLDER_NAME)
 	local plot = folder:WaitForChild("plot", 5)
 	if not plot then
@@ -85,7 +85,7 @@ function public.createItem(model: Instance, folder: Folder)
 	newModel.Parent = itemFolder
 end
 
-function public.createDistrictItem(model: Instance, folder: Folder, districtName: string)
+function public.createDistrictItem(model: Model | BasePart, folder: Folder, districtName: string)
 	local districtsFolder = folder:FindFirstChild(DISTRICTS_FOLDER_NAME)
 	local districtFolder = districtsFolder:WaitForChild(districtName, 5)
 	if not districtsFolder then
@@ -161,7 +161,8 @@ end
 function private.loadItems(player: Player, folder: Folder)
 	local itemFolder = folder:FindFirstChild(ITEMS_FOLDER_NAME)
 	if not itemFolder then
-		itemFolder = Instance.new("Folder", folder)
+		itemFolder = Instance.new("Folder")
+		itemFolder.Parent = folder
 		itemFolder.Name = ITEMS_FOLDER_NAME
 	end
 
@@ -189,11 +190,13 @@ function private.positionDistrict(newDistrict: Folder, templateDistrict: Folder,
 	local plotCFrame = plot:GetPivot()
 	local templatePlotCFrame = templatePlotFolder.plot.CFrame
 
-	local templateAreaCFrame = templateDistrict.area.CFrame
+	local area = templateDistrict:FindFirstChild("area")
+	local templateAreaCFrame = area.CFrame
 	local relativeCFrame = templatePlotCFrame:ToObjectSpace(templateAreaCFrame)
 	local targetAreaCFrame = plotCFrame:ToWorldSpace(relativeCFrame)
 
-	local currentAreaCFrame = newDistrict.area.CFrame
+	local mewArea = newDistrict:FindFirstChild("area")
+	local currentAreaCFrame = mewArea.CFrame
 	local delta = targetAreaCFrame * currentAreaCFrame:Inverse()
 
 	for _, descendant in newDistrict:GetDescendants() do
@@ -202,13 +205,14 @@ function private.positionDistrict(newDistrict: Folder, templateDistrict: Folder,
 		end
 	end
 
-	newDistrict.area.CFrame = delta * currentAreaCFrame
+	mewArea.CFrame = delta * currentAreaCFrame
 end
 
-function private.loadDistricts(player: Player, folder: Folder)
+function private.loadDistricts(folder: Folder)
 	local districtsFolder = folder:FindFirstChild(DISTRICTS_FOLDER_NAME)
 	if not districtsFolder then
-		districtsFolder = Instance.new("Folder", folder)
+		districtsFolder = Instance.new("Folder")
+		districtsFolder.Parent = folder
 		districtsFolder.Name = DISTRICTS_FOLDER_NAME
 	end
 
@@ -219,7 +223,7 @@ function private.loadDistricts(player: Player, folder: Folder)
 			local districtFolder = districtsFolder:FindFirstChild(district)
 
 			if not districtFolder then
-				districtFolder = private.createDistrict(district, templateDistrict, folder)
+				districtFolder = private.createDistrict(templateDistrict, folder)
 			end
 
 			for id, obtained in pairs(info.replaceable) do
@@ -232,14 +236,13 @@ function private.loadDistricts(player: Player, folder: Folder)
 					end
 				end
 			end
-
 		else
 			warn("No folder found for the name: " .. district)
 		end
 	end
 end
 
-function private.createDistrict(districtName: string, templateDistrict: Folder, folder: Folder): Folder
+function private.createDistrict(templateDistrict: Folder, folder: Folder): Folder
 	local districtsFolder = folder:FindFirstChild(DISTRICTS_FOLDER_NAME)
 
 	local newDistrict = templateDistrict:Clone()
@@ -266,10 +269,10 @@ function private.assignPlot(player: Player)
 			plot:SetAttribute(PLOT_ID, player.UserId)
 			local plotFolder = plot.Parent
 			plotFolder.Name = player.Name
-			
+
 			private.setSpawn(player, plotFolder)
 			private.loadItems(player, plotFolder)
-			private.loadDistricts(player, plotFolder)
+			private.loadDistricts(plotFolder)
 			break
 		end
 	end

@@ -1,5 +1,5 @@
 local ServerScriptService = game:GetService("ServerScriptService")
-local modules = ServerScriptService.modules
+local modules = ServerScriptService.Server.modules
 local ThreatData = require(modules.data.ThreatData)
 
 local public = {}
@@ -13,7 +13,7 @@ function public.getEnemyType(threatType: string): string?
 	return config.enemy
 end
 
-function public.pickLocation(hazard: Instance): CFrame
+function public.pickLocation(hazard): CFrame
 	local hazardPosition = hazard:IsA("Model") and hazard:GetPivot().Position or hazard.Position
 	local angle = math.random() * math.pi * 2
 	local offset = Vector3.new(math.cos(angle) * 4, 0, math.sin(angle) * 4)

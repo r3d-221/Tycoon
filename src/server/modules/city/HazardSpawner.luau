@@ -8,7 +8,7 @@ local HAZARD_SPREAD_RADIUS = 15
 local MAX_PLACEMENT_ATTEMPTS = 12
 local GROUND_RAY_HEIGHT = 50
 
-local modules = ServerScriptService.modules
+local modules = ServerScriptService.Server.modules
 local hazardTemplate = ReplicatedStorage.hazard_template
 local escalationTemplate = ReplicatedStorage.escalation_template
 local EnemyManager = require(modules.enemy.EnemyManager)
@@ -18,6 +18,8 @@ local private = {}
 
 local active = {}
 local usedSpotIndex = {}
+
+private.shuffledSpots = {}
 
 function public.spawn(incident)
 	local threatType = incident.threatType
@@ -168,6 +170,7 @@ function private.getPredefinedSpot(incident): Vector3?
 	if not private.shuffledSpots then
 		private.shuffledSpots = {}
 	end
+
 	if not private.shuffledSpots[incident.id] then
 		local spots = spotsFolder:GetChildren()
 		for i = #spots, 2, -1 do

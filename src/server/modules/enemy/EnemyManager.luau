@@ -2,7 +2,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 
-local modules = ServerScriptService.modules
+local modules = ServerScriptService.Server.modules
 local EnemySpawner = require(modules.enemy.EnemySpawner)
 local Enemy = require(modules.enemy.Enemy)
 
@@ -16,7 +16,7 @@ local private = {}
 local byHazard = {}
 local byIncident = {}
 
-function public.spawn(incident, hazards: {Instance})
+function public.spawn(incident, hazards: { Instance })
 	local enemyType = EnemySpawner.getEnemyType(incident.threatType)
 	if not enemyType then
 		return
@@ -79,7 +79,7 @@ function public.getEnemyByHazard(hazard: Instance)
 	return byHazard[hazard]
 end
 
-function public.getActive(incidentId: string): {any}
+function public.getActive(incidentId: string): { any }
 	local hazards = byIncident[incidentId]
 	if not hazards then
 		return {}

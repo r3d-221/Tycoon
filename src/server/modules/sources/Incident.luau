@@ -1,7 +1,6 @@
 local ServerScriptService = game:GetService("ServerScriptService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local modules = ServerScriptService.modules
+local modules = ServerScriptService.Server.modules
 local ThreatData = require(modules.data.ThreatData)
 local Signal = require(modules.Signal)
 
@@ -28,7 +27,7 @@ function private.safeCancel(thread)
 	end
 end
 
-function public.new(player: Player, threatType: string, districtId: string, cityState: {}, locationMarker: Instance)
+function public.new(player: Player, threatType: string, districtId: string, cityState: {}, locationMarker: BasePart)
 	local self = setmetatable({}, public)
 
 	local config = ThreatData[threatType]
@@ -53,7 +52,7 @@ function public.new(player: Player, threatType: string, districtId: string, city
 	self.timers = {
 		unresolved = nil,
 		completion = nil,
-		threat = nil
+		threat = nil,
 	}
 
 	self.connections = {}

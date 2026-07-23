@@ -13,7 +13,7 @@ local animate = ReplicatedStorage.Animate
 local enemyTag = "Enemy"
 
 local player = Players.LocalPlayer
-local PlayerGui  = player:WaitForChild("PlayerGui")
+local PlayerGui = player:WaitForChild("PlayerGui")
 local screen = PlayerGui:WaitForChild("ScreenGui")
 
 StartHazardTask.OnClientEvent:Connect(function(Task: string, taskId: string)
@@ -21,10 +21,10 @@ StartHazardTask.OnClientEvent:Connect(function(Task: string, taskId: string)
 	local new = taskTemplate:Clone()
 	local text = new:FindFirstChild("text")
 	local button = new:FindFirstChild("button")
-	
+
 	text.Text = Task
 	new.Parent = screen
-	
+
 	button.MouseButton1Click:Connect(function()
 		HazardTaskCompleted:FireServer(taskId, true)
 		new:Destroy()

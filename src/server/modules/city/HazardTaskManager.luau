@@ -1,7 +1,7 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local modules = ServerScriptService.modules
+local modules = ServerScriptService.Server.modules
 local HazardSpawner = require(modules.city.HazardSpawner)
 local HazardTaskData = require(modules.data.HazardTaskData)
 

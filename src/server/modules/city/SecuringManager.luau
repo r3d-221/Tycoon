@@ -14,7 +14,7 @@ function public.isSecured(incident): boolean
 	if #steps == 0 then
 		return true
 	end
-	
+
 	local done = completed[incident.id] or {}
 	for _, step in steps do
 		if not done[step] then

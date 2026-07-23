@@ -2,7 +2,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 
-local modules = ServerScriptService.modules
+local modules = ServerScriptService.Server.modules
 local Tool = require(modules.player.Tool)
 local ToolData = require(modules.data.ToolData)
 
@@ -58,9 +58,9 @@ function public.equip(player: Player, toolName: string)
 		warn("[ToolManager] " .. player.Name .. " doesn't own: " .. toolName)
 		return
 	end
-	
+
 	private.setModel(player, toolName)
-	
+
 	if equippedInstance[player] then
 		public.unequip(player)
 	end
@@ -69,7 +69,7 @@ function public.equip(player: Player, toolName: string)
 	local instance = Tool.new(player, toolName, config)
 	equippedInstance[player] = instance
 	owned.isEquipped = true
-	
+
 	print("[ToolManager] equipped " .. toolName .. " for: " .. player.Name)
 end
 
@@ -78,7 +78,7 @@ function public.unequip(player: Player)
 	if not instance then
 		return
 	end
-	
+
 	local existing = models[player]
 	if not existing then
 		return
@@ -92,7 +92,7 @@ function public.unequip(player: Player)
 	if owned then
 		owned.isEquipped = false
 	end
-	
+
 	local character = player.Character
 	if character then
 		local rightHand = character:FindFirstChild("RightHand")
@@ -103,7 +103,7 @@ function public.unequip(player: Player)
 			end
 		end
 	end
-	
+
 	existing:Destroy()
 	models[player] = nil
 	print("[ToolManager] unequipped " .. toolName .. " for: " .. player.Name)
@@ -112,7 +112,6 @@ end
 function public.getEquipped(player: Player)
 	return equippedInstance[player]
 end
-
 
 function public.work(player: Player): boolean
 	local instance = equippedInstance[player]
@@ -139,16 +138,17 @@ function private.setModel(player: Player, toolName: string)
 		warn("[ToolManager] No model found for: " .. toolName)
 		return
 	end
-	
+
 	local model = modelTemplate:Clone()
 	model.Anchored = false
 	model.CanCollide = false
 	model.Parent = character
-	
+
 	local offsetVector = model:GetAttribute("offset") or Vector3.zero
 	local rotationVector = model:GetAttribute("rotation") or Vector3.zero
-	
-	local rotationCFrame = CFrame.fromEulerAnglesXYZ(math.rad(rotationVector.X), math.rad(rotationVector.Y), math.rad(rotationVector.Z))
+
+	local rotationCFrame =
+		CFrame.fromEulerAnglesXYZ(math.rad(rotationVector.X), math.rad(rotationVector.Y), math.rad(rotationVector.Z))
 
 	local motor = Instance.new("Motor6D")
 	motor.Name = "WeaponGrip"

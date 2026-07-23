@@ -2,7 +2,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 
-local EnemyData = require(ServerScriptService.modules.data.EnemyData)
+local EnemyData = require(ServerScriptService.Server.modules.data.EnemyData)
 
 local public = {}
 local private = {}
@@ -52,11 +52,8 @@ function private.getDirectionToTarget(enemy): Vector3
 		return rootPart.CFrame.LookVector
 	end
 
-	local flat = Vector3.new(
-		targetRoot.Position.X - rootPart.Position.X,
-		0,
-		targetRoot.Position.Z - rootPart.Position.Z
-	)
+	local flat =
+		Vector3.new(targetRoot.Position.X - rootPart.Position.X, 0, targetRoot.Position.Z - rootPart.Position.Z)
 
 	if flat.Magnitude == 0 then
 		return rootPart.CFrame.LookVector
@@ -78,7 +75,6 @@ function private.getPartsHit(enemy): { [Humanoid]: true }
 
 	if hitboxInfo.type == "sphere" then
 		parts = workspace:GetPartBoundsInRadius(rootPart.Position, hitboxInfo.radius, params)
-
 	elseif hitboxInfo.type == "arc" then
 		local allParts = workspace:GetPartBoundsInRadius(rootPart.Position, hitboxInfo.range, params)
 		local forward = rootPart.CFrame.LookVector
@@ -93,7 +89,6 @@ function private.getPartsHit(enemy): { [Humanoid]: true }
 				end
 			end
 		end
-
 	elseif hitboxInfo.type == "cylinder" then
 		local direction = private.getDirectionToTarget(enemy)
 		local center = rootPart.Position + direction * (hitboxInfo.distance or 0)
@@ -161,15 +156,12 @@ function private.hitboxVisual(enemy)
 
 	if hitboxInfo.type == "sphere" then
 		private.sphereVisual(rootPart.Position, hitboxInfo.radius, windUp, active)
-
 	elseif hitboxInfo.type == "arc" then
 		private.arcVisual(rootPart, hitboxInfo.range, hitboxInfo.angle, windUp, active)
-
 	elseif hitboxInfo.type == "cylinder" then
 		local direction = private.getDirectionToTarget(enemy)
 		local center = rootPart.Position + direction * (hitboxInfo.distance or 0)
 		private.cylinderVisual(center, hitboxInfo.radius, hitboxInfo.height, windUp, active)
-
 	elseif hitboxInfo.type == "raycast" then
 		local player = enemy.target
 		local targetRoot = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
