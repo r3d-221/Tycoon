@@ -68,7 +68,7 @@ function public.addHazard(incident)
 	return hazard
 end
 
-function public.getHazards(incidentId: string): {Instance}
+function public.getHazards(incidentId: string): { Instance }
 	return active[incidentId] or {}
 end
 
@@ -113,7 +113,13 @@ function private.createHazard(template: Instance, incident, index: number): Inst
 		local found
 		position, found = private.findValidPosition(incident, size)
 		if not found then
-			warn("[HazardSpawner] no clear spot found for hazard " .. index .. " of " .. incident.id .. " -- placing anyway")
+			warn(
+				"[HazardSpawner] no clear spot found for hazard "
+					.. index
+					.. " of "
+					.. incident.id
+					.. " -- placing anyway"
+			)
 		end
 	end
 
@@ -192,7 +198,6 @@ function private.getSize(instance: Instance): Vector3
 	return Vector3.new(2, 2, 2)
 end
 
-
 function private.findValidPosition(incident, size: Vector3): (Vector3, boolean)
 	for _ = 1, MAX_PLACEMENT_ATTEMPTS do
 		local offset = private.randomOffset(HAZARD_SPREAD_RADIUS)
@@ -216,7 +221,7 @@ function private.raycastGround(position: Vector3): Vector3?
 
 	local params = RaycastParams.new()
 	params.FilterType = Enum.RaycastFilterType.Exclude
-	params.FilterDescendantsInstances = {Workspace.hazards}
+	params.FilterDescendantsInstances = { Workspace.hazards }
 
 	local result = Workspace:Raycast(rayOrigin, rayDirection, params)
 	if result then

@@ -8,9 +8,17 @@ local private = {}
 public.__index = public
 
 export type statName =
-	"population" | "happiness" | "governmentTrust" | "safetyRating"
-| "economicStrength" | "contamination" | "electricity" | "water"
-| "reputation" | "performance" | "damage"
+	"population"
+	| "happiness"
+	| "governmentTrust"
+	| "safetyRating"
+	| "economicStrength"
+	| "contamination"
+	| "electricity"
+	| "water"
+	| "reputation"
+	| "performance"
+	| "damage"
 
 ---- Sources ----
 -- unresolved threats
@@ -39,22 +47,22 @@ export type statName =
 -- need to do oop since it will track each player
 
 -- not sure if the data should be here and if it sghould be saved directly to player data after change
-local STATS: {[statName]: number} = {
+local STATS: { [statName]: number } = {
 	population = 500,
 	happiness = 60,
 	governmentTrust = 50,
 	safetyRating = 40,
 	economicStrength = 50,
-	contamination = 0
+	contamination = 0,
 }
 
 local STAT_RANGE = {
-	population = {0, 100_000},
-	happiness = {0, 100},
-	governmentTrust = {0, 100},
-	safetyRating = {0, 100},
-	economicStrength = {0, 100},
-	contamination = {0, 100}
+	population = { 0, 100_000 },
+	happiness = { 0, 100 },
+	governmentTrust = { 0, 100 },
+	safetyRating = { 0, 100 },
+	economicStrength = { 0, 100 },
+	contamination = { 0, 100 },
 }
 
 ---- Main ----
@@ -62,12 +70,12 @@ local STAT_RANGE = {
 -- will be called per player, once
 function public.new(data)
 	local self = setmetatable({}, public)
-	
+
 	self.base = {}
 	self.modifiers = {}
 	self.cache = {}
 	self.unCalculated = {}
-	
+
 	for stat, defaultValue in pairs(STATS) do
 		local value = (data and data[stat]) or defaultValue
 		self.base[stat] = value
@@ -75,9 +83,9 @@ function public.new(data)
 		self.cache[stat] = value
 		self.unCalculated[stat] = false
 	end
-	
+
 	self.statChanged = Signal.new() -- creates a new instance
-	
+
 	return self
 end
 
@@ -118,7 +126,7 @@ end
 
 function public:listModifiers(stat: string): {}
 	return self.modifiers[stat] or {}
-end	
+end
 
 -- permanent change
 function public:addToBaseData(stat: string, amount: number)
@@ -143,20 +151,20 @@ function public:calculateSideEffects()
 	else
 		self:removeModifier("happiness", "low_safety_penalty")
 	end
-	
+
 	-- high contamination lowers safety
 	if contamination > 30 then
 		self:addModifier("safetyRating", "contamination_penalty", -(contamination - 30) * 0.4)
 	else
 		self:removeModifier("safetyRating", "contamination_penalty")
 	end
-	
+
 	-- lower economic strength will lower population
 	self:addModifier("economicStrength", "population_bonus", math.clamp(population / 200, 0, 15))
 
 	-- economic strength influences trust slightly
 	self:addModifier("governmentTrust", "economy_bonus", (economy - 50) * 0.1)
-	
+
 	-- water
 	-- electricity
 end
@@ -177,7 +185,12 @@ function public:calculatePassiveIncome(districtCount: number, baseIncome: number
 	local districtMultiplier = math.max(districtCount, 1)
 	local populationScale = math.clamp(population / 1000, 0.2, 5) -- highest population multiplier is x5 and lowest is x0.2
 
-	local income = baseIncome * populationScale * trustMultiplier * safetyMultiplier * economyMultiplier * happinessMultiplier
+	local income = baseIncome
+		* populationScale
+		* trustMultiplier
+		* safetyMultiplier
+		* economyMultiplier
+		* happinessMultiplier
 
 	return math.floor(income)
 end
@@ -189,7 +202,7 @@ function public:getStat(stat: statName): number
 	if self.unCalculated[stat] then
 		return self:_recompute(stat)
 	end
-	
+
 	return self.cache[stat]
 end
 
@@ -202,11 +215,11 @@ function public:getAllStats(): {}
 end
 
 function private.clamp(value: number, stat: statName): number?
-	local range: {number} = STAT_RANGE[stat]
+	local range: { number } = STAT_RANGE[stat]
 	if not range then
 		return
 	end
-	
+
 	return math.clamp(value, range[1], range[2])
 end
 
