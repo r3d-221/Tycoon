@@ -1,9 +1,8 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local Signal = require(ServerScriptService.Server.modules.Signal)
+local Signal = require(ServerScriptService.Server.Modules.Signal)
 
 local public = {}
-local private = {}
 public.__index = public
 
 export type ToolState = "idle" | "using" | "cooldown" | "reloading"

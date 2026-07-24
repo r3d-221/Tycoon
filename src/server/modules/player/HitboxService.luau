@@ -1,8 +1,5 @@
-local ServerScriptService = game:GetService("ServerScriptService")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
-
-local EnemyData = require(ServerScriptService.Server.modules.data.EnemyData)
 
 local public = {}
 local private = {}

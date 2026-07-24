@@ -2,9 +2,9 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 
-local modules = ServerScriptService.Server.modules
-local EnemySpawner = require(modules.enemy.EnemySpawner)
-local Enemy = require(modules.enemy.Enemy)
+local Modules = ServerScriptService.Server.Modules
+local EnemySpawnerService = require(Modules.Enemy.EnemySpawnerService)
+local Enemy = require(Modules.Enemy.Enemy)
 
 type State = Enemy.State
 
@@ -17,7 +17,7 @@ local byHazard = {}
 local byIncident = {}
 
 function public.spawn(incident, hazards: { Instance })
-	local enemyType = EnemySpawner.getEnemyType(incident.threatType)
+	local enemyType = EnemySpawnerService.getEnemyType(incident.threatType)
 	if not enemyType then
 		return
 	end
@@ -36,7 +36,7 @@ function public.spawn(incident, hazards: { Instance })
 		end
 
 		local model = template:Clone()
-		model:PivotTo(EnemySpawner.pickLocation(hazard))
+		model:PivotTo(EnemySpawnerService.pickLocation(hazard))
 		model.Parent = enemies
 
 		local enemy = Enemy.new(incident.player, model, hazard)

@@ -1,7 +1,7 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local modules = ServerScriptService.Server.modules
-local Signal = require(modules.Signal)
+local Modules = ServerScriptService.Server.Modules
+local Signal = require(Modules.Signal)
 
 local public = {}
 local private = {}

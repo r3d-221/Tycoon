@@ -1,12 +1,12 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local modules = ServerScriptService.Server.modules
-local Incident = require(modules.sources.Incident)
-local DistrictData = require(modules.data.DistrictData)
-local HazardSpawner = require(modules.city.HazardSpawner)
-local SecuringManager = require(modules.city.SecuringManager)
-local IncidentSpawner = require(modules.sources.IncidentSpawner)
-local EnemyManager = require(modules.enemy.EnemyManager)
+local Modules = ServerScriptService.Server.Modules
+local Incident = require(Modules.Sources.Incident)
+local DistrictData = require(Modules.Data.DistrictData)
+local HazardSpawnerService = require(Modules.City.HazardSpawnerService)
+local SecuringService = require(Modules.City.SecuringService)
+local IncidentSpawnerService = require(Modules.Sources.IncidentSpawnerService)
+local EnemyService = require(Modules.Enemy.EnemyService)
 
 local public = {}
 local private = {}
@@ -17,7 +17,7 @@ local MAX_INCIDENTS = 4
 type State = Incident.State
 
 function public.trySpawn(player: Player, cityState: {})
-	local districtId = IncidentSpawner.pickDistrict(player)
+	local districtId = IncidentSpawnerService.pickDistrict(player)
 	if not districtId then
 		return nil
 	end
@@ -26,13 +26,13 @@ function public.trySpawn(player: Player, cityState: {})
 		return nil
 	end
 
-	local threatType = IncidentSpawner.selectThreatType(districtId)
+	local threatType = IncidentSpawnerService.selectThreatType(districtId)
 	if not threatType then
 		warn("[Manager] trySpawn: no eligible threat type for district: " .. districtId)
 		return nil
 	end
 
-	local location = IncidentSpawner.pickLocation(player, districtId)
+	local location = IncidentSpawnerService.pickLocation(player, districtId)
 	if not location then
 		warn("[Manager] trySpawn: no location for district: " .. districtId)
 		return nil
@@ -64,18 +64,18 @@ function public.spawn(player: Player, threatType: string, districtId: string, ci
 
 	incident.stateChanged:Connect(function(newState: State)
 		if newState == "active" then
-			local hazards = HazardSpawner.spawn(incident)
-			EnemyManager.spawn(incident, hazards)
+			local hazards = HazardSpawnerService.spawn(incident)
+			EnemyService.spawn(incident, hazards)
 		elseif newState == "escalated" then
-			local hazard = HazardSpawner.spawnEscalation(incident)
+			local hazard = HazardSpawnerService.spawnEscalation(incident)
 			incident.progressTarget += 1
 			if hazard then
-				EnemyManager.spawn(incident, { hazard })
+				EnemyService.spawn(incident, { hazard })
 			end
 		elseif newState == "cleared" or newState == "destroyed" then
-			HazardSpawner.clearHazards(incident.id)
-			SecuringManager.clearIncident(incident.id)
-			EnemyManager.clearBatch(incident.id)
+			HazardSpawnerService.clearHazards(incident.id)
+			SecuringService.clearIncident(incident.id)
+			EnemyService.clearBatch(incident.id)
 			private.untrack(player, incident.id)
 		end
 	end)

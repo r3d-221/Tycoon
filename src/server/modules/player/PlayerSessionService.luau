@@ -1,14 +1,14 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 local Players = game:GetService("Players")
 
-local modules = ServerScriptService.Server.modules
-local PlotManager = require(modules.plot.PlotManager)
+local Modules = ServerScriptService.Server.Modules
+local PlotService = require(Modules.Plot.PlotService)
 
-local ProximityPromptManager = require(modules.player.ProximityPromptManager)
-local ToolManager = require(modules.player.ToolManager)
-local CityStateManager = require(modules.city.CityStateManager)
-local HazardTaskManager = require(modules.city.HazardTaskManager)
-local IncidentManager = require(modules.sources.IncidentManager)
+local ProximityPromptService = require(Modules.Player.ProximityPromptService)
+local ToolService = require(Modules.Player.ToolService)
+local CityStateService = require(Modules.City.CityStateService)
+local HazardTaskService = require(Modules.City.HazardTaskService)
+local IncidentService = require(Modules.Sources.IncidentService)
 
 local public = {}
 local private = {}
@@ -29,25 +29,25 @@ local data = {
 function public.onStart()
 	private.onPlayerAdded()
 	private.onPlayerRemoved()
-	ProximityPromptManager.onStart()
-	HazardTaskManager.onStart()
+	ProximityPromptService.onStart()
+	HazardTaskService.onStart()
 end
 
 function private.onPlayerAdded()
 	Players.PlayerAdded:Connect(function(player)
-		--print("[PlotManager] Setting plot for: " .. player.Name)
-		PlotManager.onStart(player)
-		sessions[player] = CityStateManager.new(data)
+		--print("[PlotService] Setting plot for: " .. player.Name)
+		PlotService.onStart(player)
+		sessions[player] = CityStateService.new(data)
 
 		sessions[player].statChanged:Connect(function(stat, newValue, oldValue)
 			print(`{stat} changed from {oldValue} to {newValue}`)
 		end)
 
 		-- tool equiping
-		ToolManager.grant(player, "vacummCleaner")
-		ToolManager.equip(player, "vacummCleaner")
+		ToolService.grant(player, "vacummCleaner")
+		ToolService.equip(player, "vacummCleaner")
 		--task.delay(5, function()
-		--	ToolManager.unequip(player)
+		--	ToolService.unequip(player)
 		--end)
 
 		spawnLoops[player] = task.spawn(function()
@@ -55,7 +55,7 @@ function private.onPlayerAdded()
 			while sessions[player] do
 				task.wait(SPAWN_CHECK_INTERVAL)
 				if sessions[player] then
-					local incident = IncidentManager.trySpawn(player, sessions[player])
+					local incident = IncidentService.trySpawn(player, sessions[player])
 					print("[SessionManager] result:", incident)
 				end
 			end
@@ -65,13 +65,13 @@ end
 
 function private.onPlayerRemoved()
 	Players.PlayerRemoving:Connect(function(player)
-		local plotFolder = PlotManager.getPlotFolder(player)
+		local plotFolder = PlotService.getPlotFolder(player)
 		if plotFolder then
-			PlotManager.clearPlot(plotFolder)
+			PlotService.clearPlot(plotFolder)
 		end
 
-		IncidentManager.clearPlayer(player)
-		HazardTaskManager.clearPlayer(player)
+		IncidentService.clearPlayer(player)
+		HazardTaskService.clearPlayer(player)
 
 		if spawnLoops[player] then
 			task.cancel(spawnLoops[player])

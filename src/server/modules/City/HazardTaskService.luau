@@ -1,9 +1,9 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local modules = ServerScriptService.Server.modules
-local HazardSpawner = require(modules.city.HazardSpawner)
-local HazardTaskData = require(modules.data.HazardTaskData)
+local Modules = ServerScriptService.Server.Modules
+local HazardSpawnerService = require(Modules.City.HazardSpawnerService)
+local HazardTaskData = require(Modules.Data.HazardTaskData)
 
 local remotes = ReplicatedStorage.remotes
 local HazardTaskCompleted = remotes.HazardTaskCompleted
@@ -57,7 +57,7 @@ function private.onHazardTaskCompleted()
 
 		if success then
 			list.incident:registerProgress(1, list.incident.config.completionType)
-			HazardSpawner.removeHazard(list.incident.id, list.hazard)
+			HazardSpawnerService.removeHazard(list.incident.id, list.hazard)
 			print("[HazardTaskManager] " .. taskId .. " was cleared by: " .. player.Name)
 		end
 	end)

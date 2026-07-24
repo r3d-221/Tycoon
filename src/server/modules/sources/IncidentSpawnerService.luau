@@ -1,13 +1,13 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local modules = ServerScriptService.Server.modules
-local PlotManager = require(modules.plot.PlotManager)
-local DistrictData = require(modules.data.DistrictData)
-local GeneralData = require(modules.data.GeneralData)
+local Modules = ServerScriptService.Server.Modules
+local PlotService = require(Modules.Plot.PlotService)
+local DistrictData = require(Modules.Data.DistrictData)
+local GeneralData = require(Modules.Data.GeneralData)
 
 local public = {}
-local private = {}
 
+-- should check what district the player has unlocked
 function public.pickDistrict(player): string?
 	local owned = {}
 	for districtId in pairs(DistrictData) do
@@ -60,9 +60,9 @@ function public.getThreatTypes(): { [string]: { string } }
 end
 
 function public.pickLocation(player, districtId: string): BasePart?
-	local plotFolder = PlotManager.getPlotFolder(player)
+	local plotFolder = PlotService.getPlotFolder(player)
 	if not plotFolder then
-		warn("[Spawner] pickLocation: PlotManager.getPlotFolder returned nil for " .. player.Name)
+		warn("[Spawner] pickLocation: PlotService.getPlotFolder returned nil for " .. player.Name)
 		return nil
 	end
 	local districtsFolder = plotFolder:FindFirstChild("districts")

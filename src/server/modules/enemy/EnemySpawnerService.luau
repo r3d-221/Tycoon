@@ -1,9 +1,8 @@
 local ServerScriptService = game:GetService("ServerScriptService")
-local modules = ServerScriptService.Server.modules
-local ThreatData = require(modules.data.ThreatData)
+local Modules = ServerScriptService.Server.Modules
+local ThreatData = require(Modules.Data.ThreatData)
 
 local public = {}
-local private = {}
 
 function public.getEnemyType(threatType: string): string?
 	local config = ThreatData[threatType]

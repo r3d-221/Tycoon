@@ -1,9 +1,9 @@
 local ServerScriptService = game:GetService("ServerScriptService")
-local modules = ServerScriptService.Server.modules
-local Signal = require(modules.Signal)
-local EnemyData = require(modules.data.EnemyData)
-local HitboxManager = require(modules.player.HitboxManager)
-local ItemManager = require(modules.player.ItemManager)
+local Modules = ServerScriptService.Server.Modules
+local Signal = require(Modules.Signal)
+local EnemyData = require(Modules.Data.EnemyData)
+local HitboxService = require(Modules.Player.HitboxService)
+local ItemService = require(Modules.Player.ItemService)
 
 local public = {}
 local private = {}
@@ -167,7 +167,7 @@ function public:onAttack()
 				break
 			end
 
-			HitboxManager.performAttack(self)
+			HitboxService.performAttack(self)
 			task.wait(self.config.cooldown)
 		end
 	end)
@@ -198,7 +198,9 @@ function public:drops()
 	if not self.config.drops then
 		return
 	end
-	-- ItemManager.grantDrops(self.target, self.config.drops)
+
+	-- ItemService.grantDrops(self.target, self.config.drops)
+	-- hello there
 end
 
 function public:destroy()

@@ -2,9 +2,9 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 
-local modules = ServerScriptService.Server.modules
-local Tool = require(modules.player.Tool)
-local ToolData = require(modules.data.ToolData)
+local Modules = ServerScriptService.Server.Modules
+local Tool = require(Modules.Player.Tool)
+local ToolData = require(Modules.Data.ToolData)
 
 local toolTemplate = ReplicatedStorage:FindFirstChild("tool_template")
 

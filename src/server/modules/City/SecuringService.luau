@@ -1,5 +1,4 @@
 local public = {}
-local private = {}
 
 local completed = {}
 

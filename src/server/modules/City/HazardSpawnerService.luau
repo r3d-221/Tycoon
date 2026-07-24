@@ -8,10 +8,11 @@ local HAZARD_SPREAD_RADIUS = 15
 local MAX_PLACEMENT_ATTEMPTS = 12
 local GROUND_RAY_HEIGHT = 50
 
-local modules = ServerScriptService.Server.modules
+local Modules = ServerScriptService.Server.Modules
 local hazardTemplate = ReplicatedStorage.hazard_template
 local escalationTemplate = ReplicatedStorage.escalation_template
-local EnemyManager = require(modules.enemy.EnemyManager)
+
+local EnemyManager = require(Modules.Enemy.EnemyService)
 
 local public = {}
 local private = {}

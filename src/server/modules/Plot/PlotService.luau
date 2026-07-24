@@ -13,7 +13,7 @@ local templatePlotFolder = ReplicatedStorage:FindFirstChild("plot_template")
 local templatePlotItems = templatePlotFolder.items
 local templateDistrictsFolder = templatePlotFolder.districts
 
-local PlotModelData = require(ServerScriptService.Server.modules.data.PlotModelData)
+local PlotModelData = require(ServerScriptService.Server.Modules.Data.PlotModelData)
 
 local public = {}
 local private = {}

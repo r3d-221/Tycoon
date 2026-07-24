@@ -1,11 +1,11 @@
 local ProximityPromptService = game:GetService("ProximityPromptService")
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local modules = ServerScriptService.Server.modules
-local IncidentManager = require(modules.sources.IncidentManager)
-local ToolManager = require(modules.player.ToolManager)
-local SecuringManager = require(modules.city.SecuringManager)
-local HazardTaskManager = require(modules.city.HazardTaskManager)
+local Modules = ServerScriptService.Server.Modules
+local IncidentService = require(Modules.Sources.IncidentService)
+local ToolService = require(Modules.Player.ToolService)
+local SecuringService = require(Modules.City.SecuringService)
+local HazardTaskService = require(Modules.City.HazardTaskService)
 
 local public = {}
 local private = {}
@@ -21,7 +21,7 @@ function private.onPromptTriggered(prompt: ProximityPrompt, player: Player)
 	end
 
 	local incidentId = hazard:GetAttribute("incidentId")
-	local incident = IncidentManager.getIncidentById(incidentId)
+	local incident = IncidentService.getIncidentById(incidentId)
 	if not incident then
 		warn("[HazardInteraction] no incident found for id: " .. incidentId)
 		return
@@ -31,12 +31,12 @@ function private.onPromptTriggered(prompt: ProximityPrompt, player: Player)
 		return
 	end
 
-	if not SecuringManager.isSecured(incident) then
+	if not SecuringService.isSecured(incident) then
 		warn("[ProximityPromptManager] " .. player.Name .. " hasn't secured the surrounding area")
 		return
 	end
 
-	local toolInstance = ToolManager.getEquipped(player)
+	local toolInstance = ToolService.getEquipped(player)
 	if not toolInstance then
 		return
 	end
@@ -45,12 +45,12 @@ function private.onPromptTriggered(prompt: ProximityPrompt, player: Player)
 		return
 	end
 
-	local accepted = ToolManager.work(player)
+	local accepted = ToolService.work(player)
 	if not accepted then
 		return
 	end
 
-	HazardTaskManager.startTask(player, hazard, incident)
+	HazardTaskService.startTask(player, hazard, incident)
 end
 
 function private.findHazardAncestor(instance: Instance): Instance?
